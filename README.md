@@ -1,5 +1,5 @@
 # PARALLEL CRC CALCULATION
-A software realization of crc calculation in different variants. In particular, a comparison between the performance of serial and parallel approaches has been realized.
+A software implementation of crc calculation in different variants. In particular, a comparison between the performance of serial and parallel approaches has been realized.
 
 ## Repo content
 1. Serial implementation (bytewise):

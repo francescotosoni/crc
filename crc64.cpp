@@ -1,6 +1,4 @@
 #include<iostream>
-#include<string.h>
-
 
 static const uint64_t table[] = {
     0x0, 0x42f0e1eba9ea3693, 0x85e1c3d753d46d26, 0xc711223cfa3e5bb5,

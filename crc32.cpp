@@ -1,8 +1,4 @@
 #include<iostream>
-#include<string.h>
-
-//  0001 1110 1101 1100 0110 1111 0100 0001
-//  1111 0010 0110 1011 1000 0011 0000 0011
 
 static const uint32_t table[256] = {
     0x00000000L, 0xF26B8303L, 0xE13B70F7L, 0x1350F3F4L,
@@ -70,8 +66,6 @@ static const uint32_t table[256] = {
 	0x79B737BAL, 0x8BDCB4B9L, 0x988C474DL, 0x6AE7C44EL,
 	0xBE2DA0A5L, 0x4C4623A6L, 0x5F16D052L, 0xAD7D5351L
 };
-
-
 
 uint32_t crc32(uint8_t *data, unsigned int length)
 {

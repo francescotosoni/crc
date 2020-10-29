@@ -6,7 +6,7 @@
 //#include "CheckError.cuh"
 
 //using namespace timer;
-const uint32_t table[256] = {
+const uint32_t table[] = {
     0x00000000, 0xF26B8303, 0xE13B70F7, 0x1350F3F4, 0xC79A971F, 0x35F1141C, 0x26A1E7E8, 0xD4CA64EB,
 0x8AD958CF, 0x78B2DBCC, 0x6BE22838, 0x9989AB3B, 0x4D43CFD0, 0xBF284CD3, 0xAC78BF27, 0x5E133C24,
 0x105EC76F, 0xE235446C, 0xF165B798, 0x030E349B, 0xD7C45070, 0x25AFD373, 0x36FF2087, 0xC494A384,
@@ -84,12 +84,44 @@ void crc32kernel(uint8_t* data, uint32_t* crc, int length, uint32_t *d_table, ui
     /// YOUR CODE
     int id = blockIdx.x * blockDim.x + threadIdx.x;
     uint32_t in_crc = 0xffffffff;
-    uint32_t xcrc;
+    uint32_t c = *(uint32_t*)data;
+    //uint32_t tab[256];
     
     if(id < 4) { 
-        xcrc = crc ^ *(uint32_t*)data;
-        tmp[id] = table[xcrc>>(8*id) & 0x000000ff];
+        /*for(int i = 0; i < 256; i++) {
+            tab[i] = (d_table[i]>>(8*(length-id+1)));
+        }*/
+        crc[0] = in_crc ^ c;
+        
+        printf("0x%x\n", c);
+        /*crc[0] = in_crc ^ data[0];
+        crc[0] = (crc[0]>>8) ^ data[1];
+        crc[0] = (crc[0]>>16) ^ data[2];
+        crc[0] = (crc[0]>>24) ^ data[3];
+        printf("0x%x\n", crc[0]);
+        for(int i = 0; i < 16; i++) {
+            printf("%c ", data[i]);
+        }*/
+        tmp[id] = d_table[crc[0]>>(8*id) & 0xff];
     }
+    else if(id < length && id > 3) {
+        /*for(int i = 0; i < 256; i++) {
+            tab[i] = (d_table[i]>>(8*(length-id+1)));
+        }*/
+        tmp[id] = d_table[data[id] & 0xff];
+    }
+    
+    /*__syncthreads();
+
+    if(id == 0) {
+        for(int i = 0; i < length; i++) {
+            printf("0x%x ", tmp[i]);
+        }
+        printf("\n\n");
+    }*/
+    
+    //  1001 1000 0110 0000 1001 0110 1110 0100
+    //  1111 0110 1110 1000 1100 0010 0101 1000
 
 }
 
@@ -97,11 +129,20 @@ __global__
 void xorkernel(uint32_t* crc, uint32_t* tmp, int length) {
     /// YOUR CODE
     int id = blockIdx.x * blockDim.x + threadIdx.x;
+
+    /*for(int i = 0; i < length; i++) {
+        printf("0x%x ", tmp[i]);
+    }
+    printf("\n\n");*/
+
     if(id == 0) {
-        printf("0x%x - 0x%x\n", crc[id], crc[id+1]);
-        crc[id] ^= crc[id+1];
         //printf("0x%x\n", crc[id]);
-        //crc[id] ^= 0xffffffff;
+        for(int i = 0; i < length; i++) {
+            crc[0] ^= tmp[i];
+        }
+
+        //printf("0x%x\n", crc[id]);
+        crc[0] ^= 0xffffffff;
     }
 
 }
@@ -117,7 +158,8 @@ int main() {
     // HOST MEMORY ALLOCATION
    
     uint32_t hcrc = 0xffffffff;
-    uint8_t hdata[] = "ci";
+    uint8_t hdata[] = "ciaobelocomestai";
+    int length = 16;
 
     // -------------------------------------------------------------------------
     // HOST INITILIZATION
@@ -128,7 +170,7 @@ int main() {
     // HOST EXECUTIION
     //TM_host.start();
 
-    for(int i = 0; i < 2; i++) {
+    for(int i = 0; i < length; i++) {
         hcrc = table[(hcrc ^ hdata[i]) & 0xFFL] ^ (hcrc>>8);
     }
 
@@ -143,7 +185,7 @@ int main() {
 
     uint32_t crc = 0xffffffff;
     uint8_t data[] = "ciaobelocomestai";
-    int length = 16;
+    //uint8_t data[] = "iatsemocoleboaic";
 
     uint32_t* dcrc;
     uint8_t* ddata;
@@ -166,25 +208,10 @@ int main() {
 
     dim3 block_size(256, 1, 1);
     dim3 num_blocks(ceil((float)N/256), 1, 1);
-    /*int n_temp = length;
-    int n_iter = 0;
-
-    while(n_temp > 1) {
-        n_temp /= 16;
-        n_iter++;
-    }
-
-    int tile_temp = length;
-    int block = 256*2;
-
-    for(int i = 0; i < n_iter; i++){
-        crc16kernel<<<ceil((float)lenght/tile_temp), 256>>>(ddata, dcrc, length);
-        tile_temp *= block;
-    }*/
+   
     crc32kernel<<< num_blocks, block_size >>>(ddata, dcrc, length, d_table, tmp);
-    printf("1\n");
+    //cudaDeviceSynchronize();
     xorkernel<<< 1, 1 >>>(dcrc, tmp, length);
-    printf("2\n");
 
     /*TM_device.stop();
     CHECK_CUDA_ERROR

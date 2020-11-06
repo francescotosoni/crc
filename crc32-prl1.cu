@@ -40,11 +40,6 @@ void crc32kernel(uint8_t* data, uint32_t* crc, int length, uint32_t* d_table, ui
     }
 }
 
-__global__
-void xorkernel(uint32_t* v1, uint32_t* v2) {
-    *v1 ^= *v2;
-}
-
 int main() {
     Timer<DEVICE> TM_device;
     Timer<HOST>   TM_host;

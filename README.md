@@ -21,6 +21,7 @@ In addition, three input files are provided as tests in parallel directory.
 The main differences between the parallel versions, is the realization of the final *xor* operation of the "mid-CRCs" calculated in the first kernel method (the same for all three variants). It is first executed sequentially by the **host**; in the other two, it is executed in devices using two similar **reduction** techniques in a specific kernel method. The best performance is obtained from v2.
 
 ## Usage
-Each file has its own main, so it must be compiled and run separately. For the serial variant, simply compile the source file with `g++` and run it. For the parallel, just navigate to the subdirectory of the version to execute and write the following command: `bash compile.sh && ./crc32-prl`. 
+Each file has its own main, so it must be compiled and run separately. For the serial variant, simply compile the source file with `g++` and run it. For the parallel, just navigate to the subdirectory of the version to execute and write the following command: 
+`bash compile.sh && ./crc32-prl`. 
 
 **NOTE**: Serial programs have already the table itself, while for parallel programs it is dynamically generated. 

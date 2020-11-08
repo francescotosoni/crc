@@ -13,7 +13,7 @@ A software implementation of crc calculation in different variants. This work in
     - CRC32 with final XOR done by [host](./parallel/host/crc32-prl-host.cu)
     - CRC32 with final XOR done by reduction in device ([v1](./parallel/host/crc32-prl-red1.cu))
     - CRC32 with final XOR done by reduction in device ([v2](./parallel/host/crc32-prl-red2.cu))
-3. Table [generator](./parallel/big-tables-gen.cpp) for the parallel approach
+3. Table [generator](./parallel/big-table-gen.cpp) for the parallel approach
 
 The main differences between the parallel versions, is the realization of the final *xor* operation of the "mid-CRCs" calculated in the first kernel method (the same for all three variants). It is first executed sequentially by the host; in the other two, it is executed in devices using two similar reduction techniques  in a specific kernel method. The best performance is obtained from v2.
 

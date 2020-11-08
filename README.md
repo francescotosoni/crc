@@ -23,5 +23,8 @@ In particular, the CRC32-C version is realized, i.e. the polynomial `0x1EDC6F41`
 In addition, three input files are provided as tests in parallel directory. 
 
 ## Usage
-Each file has its own main, so it must be compiled and run separately. For the serial variant, simply compile the source file with `g++` and run it. For the parallel, just navigate to the subdirectory of the version to execute and write the following command: ```bash compile.sh && ./crc32-prl```. 
+Each file has its own main, so it must be compiled and run separately. For the serial variant, simply compile the source file with `g++` and run it. For the parallel, just navigate to the subdirectory of the version to execute and write the following command: 
+```
+bash compile.sh && ./crc32-prl
+```
 **NOTE**: Serial programs have already the table itself, while for parallel programs it is dynamically generated. 

@@ -24,4 +24,4 @@ The main differences between the parallel versions, is the realization of the fi
 Each file has its own main, so it must be compiled and run separately. For the serial variant, simply compile the source file with `g++` and run it. For the parallel, just navigate to the subdirectory of the version to execute and write the following command: 
 `bash compile.sh && ./crc32-prl`. 
 
-**NOTE**: Serial programs have already the table itself, while for parallel programs it is dynamically generated. 
+**NOTE**: Every serial program have already the table itself, while for parallel programs it is dynamically generated. 

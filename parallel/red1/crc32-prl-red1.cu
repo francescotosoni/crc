@@ -42,10 +42,9 @@ void xorkernel(uint32_t* d_input) {
     s_mem[tx] = d_input[id];
     __syncthreads();
 
-    for(int i = 1; i < blockDim.x; i *=2){
-        int index = threadIdx.x * i * 2;
-        if(index < blockDim.x){
-            s_mem[index] ^= s_mem[index + i];
+    for(int i = blockDim.x/2; i > 0; i >>= 1){
+        if(tx < i){
+            s_mem[tx] ^= s_mem[tx + i];
         }
         __syncthreads();
         
@@ -66,7 +65,7 @@ int main() {
     // HOST MEMORY ALLOCATION
    
     uint32_t hcrc = 0xffffffff;
-    std::ifstream fin("../input3.txt");
+    std::ifstream fin("../input1.txt");
     std::string temp;
     std::string d("");
 

@@ -10,7 +10,7 @@
 
 using namespace timer;
 
-const int DIM = 1024;
+const int DIM = 128;
 
 __global__
 void crc32kernel(uint8_t* data, int length, uint32_t* d_table, uint32_t* tmp) {

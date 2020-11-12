@@ -134,8 +134,8 @@ int main() {
 
     TM_device.start();
 
-    dim3 block_size(1024, 1, 1);
-    dim3 num_blocks(ceil((float)length/1024), 1, 1);
+    dim3 block_size(DIM, 1, 1);
+    dim3 num_blocks(ceil((float)length/DIM), 1, 1);
    
     crc32kernel<<< num_blocks, block_size >>>(ddata, length, d_table, tmp);
     
